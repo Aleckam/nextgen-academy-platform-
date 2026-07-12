@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WF03 — CSV Upload & PIN Card</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--navy:#0B1F4E;--sky:#2B7FD4;--sky-lt:#5BA3E8;--sky-pale:#D6EAFB;--gold:#C9962A;--off:#F5F8FF;--off2:#EEF4FC;--lgrey:#E8EEF8;--text:#1A2A44;--muted:#6B7A9A;--green:#2E7D32;--amber:#854F0B;--red:#A32D2D;}
+body{font-family:'Inter',sans-serif;background:#e2e8f5;padding:24px;}
+.wf-header{background:var(--navy);color:#fff;padding:10px 20px;border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:space-between;}
+.wf-header-title{font-size:13px;font-weight:600;}
+.wf-header-meta{font-size:11px;color:var(--sky-lt);}
+.steps{background:#fff;border-bottom:0.5px solid var(--lgrey);padding:12px 20px;display:flex;align-items:center;gap:0;}
+.stp{display:flex;align-items:center;gap:7px;}
+.stp-c{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;}
+.stp-c.done{background:#639922;color:#fff;}
+.stp-c.now{background:var(--navy);color:#fff;}
+.stp-c.later{background:var(--off2);color:var(--muted);border:0.5px solid var(--lgrey);}
+.stp-l{font-size:11px;}
+.stp-l.done{color:var(--green);}
+.stp-l.now{color:var(--text);font-weight:600;}
+.stp-l.later{color:var(--muted);}
+.stp-line{flex:1;height:0.5px;background:var(--lgrey);margin:0 8px;max-width:36px;}
+.stp-line.done{background:#639922;}
+.layout{display:grid;grid-template-columns:180px 1fr;background:#fff;border-radius:0 0 8px 8px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.12);}
+.sidebar{background:var(--navy);display:flex;flex-direction:column;}
+.sb-logo{padding:14px 13px 10px;border-bottom:0.5px solid rgba(255,255,255,0.08);}
+.sb-brand{background:var(--sky);border-radius:5px;padding:5px 8px;display:inline-block;}
+.sb-brand p{font-size:10px;font-weight:700;color:#fff;}
+.sb-brand span{font-size:8px;color:#D6EAFB;opacity:0.7;}
+.sb-school{padding:9px 13px;border-bottom:0.5px solid rgba(255,255,255,0.08);}
+.sb-sname{font-size:11px;font-weight:600;color:#fff;}
+.sb-srole{font-size:10px;color:var(--sky-lt);margin-top:2px;}
+.sb-nav{padding:6px 0;flex:1;}
+.nav-i{display:flex;align-items:center;gap:7px;padding:7px 13px;font-size:11px;color:rgba(255,255,255,0.45);}
+.nav-i.on{background:rgba(43,127,212,0.2);color:#fff;border-right:2px solid var(--sky);}
+.nav-i i{font-size:14px;}
+.nav-lbl{font-size:9px;color:rgba(255,255,255,0.2);padding:7px 13px 3px;text-transform:uppercase;letter-spacing:0.08em;}
+.sb-ft{padding:9px 13px;border-top:0.5px solid rgba(255,255,255,0.08);font-size:9px;color:rgba(255,255,255,0.25);line-height:1.5;}
+.main{background:var(--off);display:flex;flex-direction:column;}
+.topbar{background:#fff;border-bottom:0.5px solid var(--lgrey);padding:9px 18px;display:flex;align-items:center;justify-content:space-between;}
+.bc{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.bc .cur{color:var(--text);font-weight:500;}
+.btn{font-size:11px;padding:5px 10px;border-radius:6px;border:0.5px solid var(--lgrey);background:#fff;color:var(--text);display:inline-flex;align-items:center;gap:4px;}
+.btn.navy{background:var(--navy);color:#fff;border-color:var(--navy);}
+.btn.sky{background:var(--sky-pale);color:var(--sky);border-color:#85B7EB;}
+.btn.gold{background:var(--gold);color:#fff;border-color:var(--gold);}
+.body{padding:16px 18px;display:flex;flex-direction:column;gap:14px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.card{background:#fff;border:0.5px solid var(--lgrey);border-radius:10px;overflow:hidden;}
+.ch{padding:10px 14px;border-bottom:0.5px solid var(--lgrey);}
+.ch-t{font-size:12px;font-weight:600;color:var(--text);}
+.ch-s{font-size:10px;color:var(--muted);margin-top:2px;}
+.cb{padding:14px;display:flex;flex-direction:column;gap:11px;}
+.lbl{font-size:10px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;}
+.sel{background:var(--off2);border:0.5px solid var(--lgrey);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--text);display:flex;justify-content:space-between;align-items:center;}
+.tpl{background:var(--sky-pale);border:0.5px solid #85B7EB;border-radius:7px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;}
+.tpl p{font-size:11px;color:#0C447C;font-weight:500;}
+.tpl span{font-size:10px;color:var(--sky);}
+.dz{border:1.5px dashed var(--lgrey);border-radius:10px;padding:24px 14px;text-align:center;background:var(--off2);}
+.dz i{font-size:28px;color:var(--muted);display:block;margin-bottom:7px;}
+.dz-t{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.dz-s{font-size:10px;color:var(--muted);margin-bottom:10px;}
+.fmt{background:var(--off2);border-radius:7px;padding:9px 11px;}
+.fmt-t{font-size:10px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;}
+.fmt-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:4px;}
+.fc{font-size:9px;padding:4px 6px;border-radius:3px;text-align:center;}
+.fc.req{background:var(--sky-pale);color:var(--sky);border:0.5px solid #85B7EB;}
+.fc.opt{background:#fff;color:var(--muted);border:0.5px solid var(--lgrey);}
+.how-step{display:flex;gap:10px;align-items:flex-start;}
+.how-num{width:26px;height:26px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0;}
+.how-t{font-size:11px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.how-s{font-size:10px;color:var(--muted);line-height:1.5;}
+.note{background:var(--off2);border-left:3px solid var(--gold);padding:8px 10px;font-size:10px;color:var(--text);line-height:1.5;border-radius:0 5px 5px 0;}
+.divider{border-top:2px dashed var(--lgrey);padding-top:14px;margin-top:2px;}
+.divider-lbl{font-size:10px;color:var(--muted);text-align:center;background:var(--off2);padding:4px 10px;border-radius:6px;margin-bottom:12px;display:inline-block;width:100%;text-align:center;}
+.success{background:#EAF3DE;border:0.5px solid #C0DD97;border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.si{width:32px;height:32px;border-radius:50%;background:#639922;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.si i{font-size:16px;color:#fff;}
+.st{font-size:12px;font-weight:600;color:#27500A;}
+.ss{font-size:10px;color:var(--green);margin-top:2px;}
+.prev-two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.col-hdr{display:grid;background:var(--off2);border-bottom:0.5px solid var(--lgrey);}
+.th{font-size:9px;font-weight:600;color:var(--muted);padding:6px 10px;text-transform:uppercase;letter-spacing:0.06em;}
+.tr{display:grid;border-bottom:0.5px solid var(--lgrey);align-items:center;}
+.tr.err{background:#FCEBEB;}
+.ptd{font-size:11px;color:var(--text);padding:7px 10px;}
+.ptd.m{color:var(--muted);}
+.pin-chip{font-family:monospace;font-size:11px;background:var(--off2);border-radius:3px;padding:2px 6px;color:var(--text);border:0.5px solid var(--lgrey);}
+.bdg{display:inline-flex;font-size:9px;padding:2px 6px;border-radius:100px;font-weight:500;}
+.bdg.ok{background:#EAF3DE;color:var(--green);}
+.bdg.warn{background:#FAEEDA;color:var(--amber);}
+.pin-doc{border:1px solid var(--lgrey);border-radius:7px;overflow:hidden;background:#fff;}
+.pd-hdr{background:var(--navy);padding:9px 12px;display:flex;align-items:center;justify-content:space-between;}
+.pd-brand{font-size:11px;font-weight:700;color:#fff;}
+.pd-brand span{color:var(--gold);}
+.pd-url{font-size:9px;color:rgba(255,255,255,0.4);}
+.pd-title{padding:8px 12px;border-bottom:0.5px solid var(--lgrey);}
+.pd-t{font-size:11px;font-weight:600;color:var(--navy);}
+.pd-m{font-size:9px;color:var(--muted);margin-top:2px;}
+.pd-inst{background:var(--sky-pale);padding:6px 12px;font-size:9px;color:var(--sky);border-bottom:0.5px solid #B5D4F4;line-height:1.5;}
+.pt-hdr{display:grid;grid-template-columns:1.4fr 1.2fr 0.7fr;background:var(--off2);}
+.pt-th{font-size:8px;font-weight:600;color:var(--muted);padding:5px 10px;text-transform:uppercase;letter-spacing:0.05em;}
+.pt-tr{display:grid;grid-template-columns:1.4fr 1.2fr 0.7fr;border-bottom:0.5px solid var(--lgrey);}
+.pt-tr:last-child{border-bottom:none;}
+.pt-td{font-size:9px;color:var(--text);padding:5px 10px;}
+.pt-td.pin{font-family:monospace;font-weight:700;color:var(--navy);font-size:10px;letter-spacing:0.1em;}
+.pd-ft{background:var(--off2);padding:6px 12px;border-top:0.5px solid var(--lgrey);}
+.pd-ft p{font-size:8px;color:var(--muted);line-height:1.5;}
+.pd-ft a{font-size:8px;color:var(--sky);}
+</style>
+</head>
+<body>
+<div class="wf-header">
+  <span class="wf-header-title">WF03 — CSV Student Upload + PIN Card · School Portal · Desktop</span>
+  <span class="wf-header-meta">NextGen Academy · Wireframe v1.0</span>
+</div>
+<div class="steps">
+  <div class="stp"><div class="stp-c done"><i class="ti ti-check" style="font-size:11px"></i></div><div class="stp-l done">Create classes</div></div>
+  <div class="stp-line done"></div>
+  <div class="stp"><div class="stp-c now">2</div><div class="stp-l now">Upload students</div></div>
+  <div class="stp-line"></div>
+  <div class="stp"><div class="stp-c later">3</div><div class="stp-l later">Download PIN cards</div></div>
+  <div class="stp-line"></div>
+  <div class="stp"><div class="stp-c later">4</div><div class="stp-l later">Students go live</div></div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="sb-logo"><div class="sb-brand"><p>NextGen</p><span>School Portal</span></div></div>
+    <div class="sb-school"><div class="sb-sname">Redeemed Group of Schools</div><div class="sb-srole">Administrator</div></div>
+    <div class="sb-nav">
+      <div class="nav-i"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-i on"><i class="ti ti-users"></i> Students</div>
+      <div class="nav-i"><i class="ti ti-school"></i> Classes</div>
+      <div class="nav-i"><i class="ti ti-certificate"></i> Certificates</div>
+      <div class="nav-lbl">Reports</div>
+      <div class="nav-i"><i class="ti ti-file-text"></i> Term Report</div>
+      <div class="nav-i"><i class="ti ti-chart-bar"></i> Progress</div>
+      <div class="nav-lbl">Account</div>
+      <div class="nav-i"><i class="ti ti-credit-card"></i> Subscription</div>
+      <div class="nav-i"><i class="ti ti-settings"></i> Settings</div>
+    </div>
+    <div class="sb-ft">Term 2 · 2026<br>Subscription active</div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div class="bc"><i class="ti ti-users"></i><span>Students</span><i class="ti ti-chevron-right"></i><span class="cur">Upload — Form 2B</span></div>
+      <div class="btn"><i class="ti ti-arrow-left" style="font-size:11px"></i> Back</div>
+    </div>
+    <div class="body">
+      <div class="two">
+        <div class="card">
+          <div class="ch"><div class="ch-t">Upload student list</div><div class="ch-s">Add students in bulk via CSV file</div></div>
+          <div class="cb">
+            <div><div class="lbl">Select class</div><div class="sel"><span>Form 2B — Young Investors Track</span><i class="ti ti-chevron-down"></i></div></div>
+            <div class="tpl"><div><p>Download the CSV template first</p><span>Fill in your student list, then upload below</span></div><div class="btn sky"><i class="ti ti-download" style="font-size:11px"></i> Template</div></div>
+            <div class="dz"><i class="ti ti-file-upload"></i><div class="dz-t">Drag and drop your CSV file here</div><div class="dz-s">or click to browse your computer</div><div class="btn navy"><i class="ti ti-upload" style="font-size:12px"></i> Choose file</div></div>
+            <div class="fmt">
+              <div class="fmt-t">Required CSV columns</div>
+              <div class="fmt-row"><div class="fc req">First name *</div><div class="fc req">Last name *</div><div class="fc req">Class name *</div></div>
+              <div class="fmt-row"><div class="fc opt">Student ID</div><div class="fc opt">Age group</div><div class="fc opt">&nbsp;</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ch-t">How it works</div><div class="ch-s">From CSV to students logged in</div></div>
+          <div class="cb">
+            <div class="how-step"><div class="how-num">1</div><div><div class="how-t">Download the template</div><div class="how-s">Get our CSV template and fill in student names. Or export directly from your existing school register or Excel file.</div></div></div>
+            <div class="how-step"><div class="how-num">2</div><div><div class="how-t">Upload and review</div><div class="how-s">Upload the file. NextGen reads it and shows a preview before anything is saved. Fix any errors before confirming.</div></div></div>
+            <div class="how-step"><div class="how-num">3</div><div><div class="how-t">Download PIN cards</div><div class="how-s">NextGen generates a 4-digit PIN for every student. Download and print — hand it out in class and students can log in immediately.</div></div></div>
+            <div class="note"><strong>No email addresses needed.</strong> Students log in with their name and PIN only. Works on any device including shared school computers.</div>
+          </div>
+        </div>
+      </div>
+      <div class="divider">
+        <div class="divider-lbl">↓ After file is uploaded — review before confirming</div>
+        <div class="success"><div class="si"><i class="ti ti-check"></i></div><div><div class="st">58 students read from your file — please review before confirming</div><div class="ss">56 valid · 2 need attention · 0 duplicates found</div></div><div style="margin-left:auto;display:flex;gap:6px;"><div class="btn">Cancel</div><div class="btn navy"><i class="ti ti-check" style="font-size:11px"></i> Confirm & create accounts</div></div></div>
+        <div class="prev-two">
+          <div class="card">
+            <div class="ch" style="display:flex;justify-content:space-between;"><div class="ch-t">Student preview</div><div style="font-size:10px;color:var(--muted);">Showing 5 of 58</div></div>
+            <div class="col-hdr" style="grid-template-columns:1.5fr 0.7fr 0.6fr 1fr;"><div class="th">Name</div><div class="th">Class</div><div class="th">PIN</div><div class="th">Status</div></div>
+            <div class="tr" style="grid-template-columns:1.5fr 0.7fr 0.6fr 1fr;"><div class="ptd" style="font-weight:500;">Tatenda Mhofu</div><div class="ptd m">2B</div><div class="ptd"><span class="pin-chip">7284</span></div><div class="ptd"><span class="bdg ok">Ready</span></div></div>
+            <div class="tr" style="grid-template-columns:1.5fr 0.7fr 0.6fr 1fr;"><div class="ptd" style="font-weight:500;">Rudo Chikwanda</div><div class="ptd m">2B</div><div class="ptd"><span class="pin-chip">3951</span></div><div class="ptd"><span class="bdg ok">Ready</span></div></div>
+            <div class="tr" style="grid-template-columns:1.5fr 0.7fr 0.6fr 1fr;"><div class="ptd" style="font-weight:500;">Farai Mutasa</div><div class="ptd m">2B</div><div class="ptd"><span class="pin-chip">6147</span></div><div class="ptd"><span class="bdg ok">Ready</span></div></div>
+            <div class="tr err" style="grid-template-columns:1.5fr 0.7fr 0.6fr 1fr;"><div class="ptd" style="font-weight:500;">Nyasha</div><div class="ptd m">2B</div><div class="ptd">—</div><div class="ptd"><span class="bdg warn">Last name missing</span></div></div>
+            <div class="tr err" style="grid-template-columns:1.5fr 0.7fr 0.6fr 1fr;"><div class="ptd" style="font-weight:500;">Tawanda Sibanda</div><div class="ptd m">3A</div><div class="ptd">—</div><div class="ptd"><span class="bdg warn">Class not found</span></div></div>
+            <div style="padding:7px 12px;border-top:0.5px solid var(--lgrey);"><div class="btn" style="width:100%;justify-content:center;">Show all 58 students</div></div>
+          </div>
+          <div class="card">
+            <div class="ch" style="display:flex;justify-content:space-between;align-items:center;"><div><div class="ch-t">PIN card preview</div><div class="ch-s">Print and hand out to students in class</div></div><div class="btn gold" style="opacity:0.5;"><i class="ti ti-download" style="font-size:11px"></i> After confirm</div></div>
+            <div style="padding:12px;">
+              <div class="pin-doc">
+                <div class="pd-hdr"><div class="pd-brand">NEXT<span>GEN</span> Academy of Finance & AI</div><div class="pd-url">nextgen-academy.co.zw</div></div>
+                <div class="pd-title"><div class="pd-t">Student Login Cards — Form 2B</div><div class="pd-m">Redeemed Group of Schools · Young Investors Track · Term 2, 2026</div></div>
+                <div class="pd-inst"><strong>To log in:</strong> Go to nextgen-academy.co.zw · Click "Student Login" · Enter your username and 4-digit PIN</div>
+                <div class="pt-hdr"><div class="pt-th">Student name</div><div class="pt-th">Username</div><div class="pt-th">PIN</div></div>
+                <div class="pt-tr"><div class="pt-td">Tatenda Mhofu</div><div class="pt-td">TatendaM-001</div><div class="pt-td pin">7284</div></div>
+                <div class="pt-tr"><div class="pt-td">Rudo Chikwanda</div><div class="pt-td">RudoC-002</div><div class="pt-td pin">3951</div></div>
+                <div class="pt-tr"><div class="pt-td">Farai Mutasa</div><div class="pt-td">FaraiM-003</div><div class="pt-td pin">6147</div></div>
+                <div class="pt-tr"><div class="pt-td">Zvikomborero M.</div><div class="pt-td">ZvikomboreroM-004</div><div class="pt-td pin">4823</div></div>
+                <div class="pd-ft"><p>Keep this card safe. If you lose your PIN, ask your teacher to reset it.</p><a>nextgen-academy.co.zw · nextgenacademyoffinanceandai@gmail.com</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

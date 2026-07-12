@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WF04 — Young Investors Lesson Player</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--navy:#0B1F4E;--navy-mid:#162C6B;--sky:#2B7FD4;--sky-lt:#5BA3E8;--sky-pale:#D6EAFB;--gold:#C9962A;--gold-lt:#F0BC52;--off:#F5F8FF;--off2:#EEF4FC;--lgrey:#E8EEF8;--text:#1A2A44;--muted:#6B7A9A;--green:#2E7D32;}
+body{font-family:'Inter',sans-serif;background:#e2e8f5;padding:24px;}
+.wf-header{background:var(--navy);color:#fff;padding:10px 20px;border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:space-between;}
+.wf-header-title{font-size:13px;font-weight:600;}
+.wf-header-meta{font-size:11px;color:var(--sky-lt);}
+.wrap{background:#fff;border-radius:0 0 8px 8px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.12);}
+.top-nav{background:var(--navy);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:44px;}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.nav-brand{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#fff;}
+.nav-brand span{color:var(--gold);}
+.nav-sep{width:0.5px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-module{font-size:11px;color:var(--sky-lt);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-coins{display:flex;align-items:center;gap:5px;background:rgba(201,150,42,0.15);border:0.5px solid rgba(201,150,42,0.3);border-radius:100px;padding:4px 10px;}
+.nav-coins i{font-size:13px;color:var(--gold);}
+.nav-coins span{font-size:11px;font-weight:600;color:var(--gold-lt);}
+.nav-streak{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.06);border-radius:100px;padding:4px 10px;}
+.nav-streak i{font-size:13px;color:#EF9F27;}
+.nav-streak span{font-size:11px;color:rgba(255,255,255,0.7);}
+.nav-avatar{width:28px;height:28px;border-radius:50%;background:var(--sky);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;}
+.prog-strip{background:var(--navy-mid);padding:7px 20px;display:flex;align-items:center;gap:12px;}
+.prog-label{font-size:10px;color:rgba(255,255,255,0.45);white-space:nowrap;}
+.prog-modules{display:flex;gap:4px;flex:1;}
+.prog-mod{height:6px;border-radius:100px;flex:1;}
+.prog-mod.done{background:#639922;}
+.prog-mod.active{background:var(--sky);}
+.prog-mod.locked{background:rgba(255,255,255,0.1);}
+.prog-pct{font-size:10px;color:var(--sky-lt);white-space:nowrap;font-weight:500;}
+.layout{display:grid;grid-template-columns:1fr 290px;min-height:500px;}
+.lesson-main{display:flex;flex-direction:column;background:var(--off);}
+.video-wrap{background:#0a0a1a;position:relative;height:260px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.video-bg{position:absolute;inset:0;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);}
+.video-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(43,127,212,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(43,127,212,0.06) 1px,transparent 1px);background-size:32px 32px;}
+.video-content{position:relative;z-index:1;text-align:center;}
+.video-tag{font-size:10px;color:var(--sky-lt);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+.video-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:16px;line-height:1.3;}
+.play-btn{width:52px;height:52px;border-radius:50%;background:var(--sky);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+.play-btn i{font-size:22px;color:#fff;}
+.video-dur{font-size:10px;color:rgba(255,255,255,0.35);}
+.video-controls{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.65);padding:8px 14px;display:flex;align-items:center;gap:10px;}
+.vc-time{font-size:10px;color:rgba(255,255,255,0.55);white-space:nowrap;}
+.vc-bar{flex:1;height:3px;background:rgba(255,255,255,0.2);border-radius:100px;position:relative;}
+.vc-fill{width:42%;height:100%;background:var(--sky);border-radius:100px;}
+.vc-dot{position:absolute;left:42%;top:50%;transform:translate(-50%,-50%);width:9px;height:9px;border-radius:50%;background:#fff;}
+.vc-icons{display:flex;gap:10px;}
+.vc-icons i{font-size:14px;color:rgba(255,255,255,0.55);}
+.lesson-body{padding:14px 18px;display:flex;flex-direction:column;gap:11px;}
+.lesson-bc{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.lesson-bc .cur{color:var(--text);font-weight:500;}
+.lesson-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.lesson-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);line-height:1.3;}
+.lesson-meta{display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;}
+.lm{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);}
+.lm i{font-size:12px;}
+.badges{display:flex;gap:5px;flex-shrink:0;}
+.lb{font-size:9px;padding:3px 8px;border-radius:100px;font-weight:500;}
+.lb-zse{background:var(--sky-pale);color:var(--sky);}
+.lb-vfex{background:#EEEDFE;color:#534AB7;}
+.key-terms{background:#fff;border:0.5px solid var(--lgrey);border-radius:10px;padding:11px 13px;}
+.kt-title{font-size:11px;font-weight:600;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.kt-title i{color:var(--sky);font-size:13px;}
+.kt-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.kt-item{background:var(--off2);border-radius:7px;padding:7px 10px;border:0.5px solid var(--lgrey);}
+.kt-word{font-size:11px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+.kt-def{font-size:10px;color:var(--muted);line-height:1.4;}
+.quiz-prompt{background:#EAF3DE;border:0.5px solid #C0DD97;border-radius:7px;padding:8px 12px;display:flex;align-items:center;gap:7px;}
+.quiz-prompt i{font-size:16px;color:var(--green);}
+.qp-text{font-size:11px;color:#27500A;line-height:1.4;}
+.lesson-nav{display:flex;align-items:center;justify-content:space-between;padding-top:2px;}
+.btn{font-size:11px;padding:6px 12px;border-radius:6px;border:0.5px solid var(--lgrey);background:#fff;color:var(--text);display:inline-flex;align-items:center;gap:5px;}
+.btn.navy{background:var(--navy);color:#fff;border-color:var(--navy);}
+.btn.disabled{opacity:0.35;}
+.lesson-sidebar{background:#fff;border-left:0.5px solid var(--lgrey);display:flex;flex-direction:column;}
+.sb-sec{padding:11px 13px;border-bottom:0.5px solid var(--lgrey);}
+.sb-sec-title{font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.sb-sec-sub{font-size:10px;color:var(--muted);margin-bottom:7px;}
+.lesson-list{display:flex;flex-direction:column;gap:3px;}
+.li{display:flex;align-items:center;gap:7px;padding:6px 7px;border-radius:7px;}
+.li.done{background:var(--off2);}
+.li.active{background:var(--sky-pale);border:0.5px solid #85B7EB;}
+.li.locked{opacity:0.4;}
+.li-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.li-icon.done{background:#639922;}
+.li-icon.active{background:var(--sky);}
+.li-icon.locked{background:var(--off2);border:0.5px solid var(--lgrey);}
+.li-icon i{font-size:11px;color:#fff;}
+.li-icon.locked i{color:var(--muted);}
+.li-name{font-size:11px;color:var(--text);line-height:1.3;flex:1;}
+.li.active .li-name{font-weight:600;color:var(--sky);}
+.li-dur{font-size:9px;color:var(--muted);margin-top:1px;}
+.li-quiz{font-size:9px;padding:2px 6px;border-radius:100px;background:#FAEEDA;color:#854F0B;font-weight:500;}
+.portfolio-widget{padding:11px 13px;border-bottom:0.5px solid var(--lgrey);}
+.pw-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.pw-title{font-size:11px;font-weight:600;color:var(--text);}
+.pw-live{font-size:9px;color:var(--green);background:#EAF3DE;padding:2px 6px;border-radius:100px;display:flex;align-items:center;gap:3px;}
+.pw-dot{width:5px;height:5px;border-radius:50%;background:var(--green);}
+.portfolio-val{font-size:22px;font-weight:700;color:var(--text);line-height:1;margin-bottom:2px;}
+.portfolio-chg{font-size:11px;color:var(--green);display:flex;align-items:center;gap:3px;}
+.stocks{display:flex;flex-direction:column;gap:4px;margin-top:9px;}
+.stock-row{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:var(--off2);border-radius:6px;}
+.stock-name{font-size:11px;font-weight:500;color:var(--text);}
+.stock-ex{font-size:9px;color:var(--muted);}
+.stock-price{font-size:11px;font-weight:500;color:var(--text);text-align:right;}
+.stock-chg{font-size:9px;text-align:right;}
+.up{color:var(--green);}
+.dn{color:#A32D2D;}
+.pw-note{font-size:9px;color:var(--muted);margin-top:5px;font-style:italic;}
+.pw-link{font-size:10px;color:var(--sky);display:flex;align-items:center;gap:3px;margin-top:5px;}
+.achievements{padding:11px 13px;}
+.ach-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:6px;}
+.ach-item{text-align:center;padding:7px 4px;background:var(--off2);border-radius:7px;border:0.5px solid var(--lgrey);}
+.ach-item.earned{background:#EAF3DE;border-color:#C0DD97;}
+.ach-item.locked{opacity:0.35;}
+.ach-icon{font-size:18px;display:block;margin-bottom:3px;}
+.ach-name{font-size:9px;color:var(--muted);line-height:1.3;}
+.ach-item.earned .ach-name{color:var(--green);}
+</style>
+</head>
+<body>
+<div class="wf-header">
+  <span class="wf-header-title">WF04 — Young Investors Lesson Player · Ages 13–18 · Learner App · Desktop</span>
+  <span class="wf-header-meta">NextGen Academy · Wireframe v1.0</span>
+</div>
+<div class="wrap">
+  <div class="top-nav">
+    <div class="nav-left">
+      <div class="nav-brand">NEXT<span>GEN</span></div>
+      <div class="nav-sep"></div>
+      <div class="nav-module">Young Investors Track · Module 3</div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-coins"><i class="ti ti-coin"></i><span>1,240 coins</span></div>
+      <div class="nav-streak"><i class="ti ti-flame"></i><span>7 day streak</span></div>
+      <div class="nav-avatar">TM</div>
+    </div>
+  </div>
+  <div class="prog-strip">
+    <div class="prog-label">Your progress</div>
+    <div class="prog-modules">
+      <div class="prog-mod done"></div>
+      <div class="prog-mod done"></div>
+      <div class="prog-mod active"></div>
+      <div class="prog-mod locked"></div>
+      <div class="prog-mod locked"></div>
+    </div>
+    <div class="prog-pct">Module 3 of 5 · 71% complete</div>
+  </div>
+  <div class="layout">
+    <div class="lesson-main">
+      <div class="video-wrap">
+        <div class="video-bg"></div>
+        <div class="video-grid"></div>
+        <div class="video-content">
+          <div class="video-tag">Module 3 · Lesson 4</div>
+          <div class="video-title">How the Zimbabwe Stock Exchange<br>actually works</div>
+          <div class="play-btn"><i class="ti ti-player-play"></i></div>
+          <div class="video-dur">7 min 24 sec</div>
+        </div>
+        <div class="video-controls">
+          <i class="ti ti-player-pause" style="font-size:15px;color:#fff;"></i>
+          <div class="vc-time">3:06 / 7:24</div>
+          <div class="vc-bar"><div class="vc-fill"></div><div class="vc-dot"></div></div>
+          <div class="vc-icons"><i class="ti ti-volume"></i><i class="ti ti-maximize"></i></div>
+        </div>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-bc"><span>Young Investors</span><i class="ti ti-chevron-right"></i><span>Module 3 — ZSE & VFEX Investing</span><i class="ti ti-chevron-right"></i><span class="cur">Lesson 4</span></div>
+        <div class="lesson-title-row">
+          <div><div class="lesson-title">How the Zimbabwe Stock Exchange actually works</div><div class="lesson-meta"><div class="lm"><i class="ti ti-clock"></i> 7 min</div><div class="lm"><i class="ti ti-file-text"></i> Workbook included</div><div class="lm"><i class="ti ti-clipboard-check"></i> Quiz after lesson</div></div></div>
+          <div class="badges"><span class="lb lb-zse">ZSE</span><span class="lb lb-vfex">VFEX</span></div>
+        </div>
+        <div class="key-terms">
+          <div class="kt-title"><i class="ti ti-book"></i> Key terms in this lesson</div>
+          <div class="kt-grid">
+            <div class="kt-item"><div class="kt-word">Share / Stock</div><div class="kt-def">A small piece of ownership in a company listed on the ZSE or VFEX</div></div>
+            <div class="kt-item"><div class="kt-word">Market capitalisation</div><div class="kt-def">Total value of all shares — share price × total shares in issue</div></div>
+            <div class="kt-item"><div class="kt-word">Dividend</div><div class="kt-def">A portion of company profit paid out to shareholders</div></div>
+            <div class="kt-item"><div class="kt-word">VFEX</div><div class="kt-def">Victoria Falls Stock Exchange — Zimbabwe's USD-denominated market</div></div>
+          </div>
+        </div>
+        <div class="quiz-prompt"><i class="ti ti-clipboard-check"></i><div class="qp-text">Finish watching to unlock the quiz — answer 4 out of 5 correctly to earn <strong>150 NextGen Coins</strong> and progress to Lesson 5</div></div>
+        <div class="lesson-nav">
+          <div class="btn disabled"><i class="ti ti-arrow-left" style="font-size:11px"></i> Previous lesson</div>
+          <div style="display:flex;gap:6px;"><div class="btn"><i class="ti ti-download" style="font-size:11px"></i> Workbook</div><div class="btn navy">Next lesson <i class="ti ti-arrow-right" style="font-size:11px"></i></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="lesson-sidebar">
+      <div class="sb-sec">
+        <div class="sb-sec-title">Module 3 — ZSE & VFEX Investing</div>
+        <div class="sb-sec-sub">4 of 6 lessons complete</div>
+        <div class="lesson-list">
+          <div class="li done"><div class="li-icon done"><i class="ti ti-check"></i></div><div><div class="li-name">What is investing?</div><div class="li-dur">5 min · Quiz passed</div></div></div>
+          <div class="li done"><div class="li-icon done"><i class="ti ti-check"></i></div><div><div class="li-name">Types of investments in Zimbabwe</div><div class="li-dur">6 min · Quiz passed</div></div></div>
+          <div class="li done"><div class="li-icon done"><i class="ti ti-check"></i></div><div><div class="li-name">Risk vs return — smart choices</div><div class="li-dur">8 min · Quiz passed</div></div></div>
+          <div class="li active"><div class="li-icon active"><i class="ti ti-player-play"></i></div><div><div class="li-name">How the ZSE actually works</div><div class="li-dur">7 min · Watching now</div></div><div class="li-quiz">Quiz</div></div>
+          <div class="li locked"><div class="li-icon locked"><i class="ti ti-lock"></i></div><div><div class="li-name">Reading a ZSE share price</div><div class="li-dur">6 min</div></div></div>
+          <div class="li locked"><div class="li-icon locked"><i class="ti ti-lock"></i></div><div><div class="li-name">Building your first portfolio</div><div class="li-dur">9 min</div></div></div>
+        </div>
+      </div>
+      <div class="portfolio-widget">
+        <div class="pw-hdr"><div class="pw-title">Your virtual portfolio</div><div class="pw-live"><div class="pw-dot"></div> ZSE live</div></div>
+        <div class="portfolio-val">$1,087.40</div>
+        <div class="portfolio-chg"><i class="ti ti-arrow-up"></i> +$87.40 (+8.7%) since start</div>
+        <div class="stocks">
+          <div class="stock-row"><div><div class="stock-name">Econet Wireless</div><div class="stock-ex">ZSE · 40 shares</div></div><div><div class="stock-price">$324.00</div><div class="stock-chg up">+2.1% today</div></div></div>
+          <div class="stock-row"><div><div class="stock-name">Caledonia Mining</div><div class="stock-ex">VFEX · 15 shares</div></div><div><div class="stock-price">$412.50</div><div class="stock-chg up">+0.8% today</div></div></div>
+          <div class="stock-row"><div><div class="stock-name">Innscor Africa</div><div class="stock-ex">ZSE · 60 shares</div></div><div><div class="stock-price">$350.90</div><div class="stock-chg dn">-0.4% today</div></div></div>
+        </div>
+        <div class="pw-note">Virtual portfolio — real ZSE & VFEX prices</div>
+        <div class="pw-link"><i class="ti ti-external-link"></i> Open full portfolio</div>
+      </div>
+      <div class="achievements">
+        <div class="sb-sec-title">Your badges</div>
+        <div class="ach-grid">
+          <div class="ach-item earned"><span class="ach-icon">🏅</span><div class="ach-name">First investor</div></div>
+          <div class="ach-item earned"><span class="ach-icon">📈</span><div class="ach-name">ZSE scholar</div></div>
+          <div class="ach-item earned"><span class="ach-icon">🔥</span><div class="ach-name">7 day streak</div></div>
+          <div class="ach-item locked"><span class="ach-icon">💼</span><div class="ach-name">Portfolio builder</div></div>
+          <div class="ach-item locked"><span class="ach-icon">🎓</span><div class="ach-name">Module 3 cert</div></div>
+          <div class="ach-item locked"><span class="ach-icon">🏆</span><div class="ach-name">Top investor</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
