@@ -1,0 +1,18 @@
+# Backend (Python / Flask)
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.db
+backend/instance/
+backend/.env
+*.pyc
+
+# Frontend (Node / Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# OS / editor
+.DS_Store
+*.swp
